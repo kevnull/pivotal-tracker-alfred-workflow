@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>kevnull_pivotaltracker</string>
+	<key>connections</key>
+	<dict>
+		<key>839F51A8-3E78-4846-8D44-A5B3CB5C7070</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B44DF9B5-F6BB-4FDC-8072-B61654BC3BEB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>22D4FFB4-C318-413D-B6E6-59946A18ED34</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>E173F186-11D5-4BC3-94B4-AD2A6CF24EF1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>839F51A8-3E78-4846-8D44-A5B3CB5C7070</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Kevin Cheng</string>
+	<key>description</key>
+	<string>Add Story</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Pivotal Tracker</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Added Story</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>22D4FFB4-C318-413D-B6E6-59946A18ED34</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>pt</string>
+				<key>text</key>
+				<string>Add Story to Pivotal Tracker</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>E173F186-11D5-4BC3-94B4-AD2A6CF24EF1</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>$token = "INSERT YOUR TOKEN HERE";
+$requested_by = "INSERT YOUR NAME HERE";
+$project = "INSERT PROJECT ID HERE";
+$name = "{query}";
+$story_type = "feature";
+
+$pos = strpos($name, " ");
+$param = substr($name, 0, $pos);
+if ($param == "b" || $param == "bug") {
+	$story_type = "bug";
+	$name = substr($name, $pos+1);
+} else if ($param == "f" || $param == "feature") {
+	$story_type = "feature";
+	$name = substr($name, $pos+1);
+} else if ($param == "c" || $param == "chore") {
+	$story_type = "chore";
+	$name = substr($name, $pos+1);
+}
+
+// Create the new story
+$cmd = "curl -H \"X-TrackerToken: ".$token."\" "
+	. "-X POST -H \"Content-type: application/xml\" "
+	. "-d \"&lt;story&gt;"
+	. "&lt;requested_by&gt;".$requested_by."&lt;/requested_by&gt;"
+	. "&lt;name&gt;".$name."&lt;/name&gt;"
+	. "&lt;story_type&gt;".$story_type."&lt;/story_type&gt;"
+	. "&lt;/story&gt;\" "
+	. "https://www.pivotaltracker.com/services/v3/projects/".$project."/stories";
+$xml = shell_exec($cmd);
+
+// Return an object
+$story = new SimpleXMLElement($xml);
+
+echo $story-&gt;url;</string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>839F51A8-3E78-4846-8D44-A5B3CB5C7070</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>B44DF9B5-F6BB-4FDC-8072-B61654BC3BEB</string>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Creates a story to Pivotal Tracker project. Copies resulting story url to clipboard.
+
+SETUP
+In the script, set the following:
+$token = "INSERT YOUR TOKEN HERE";
+Go to your name-&gt;profile in Pivotal Tracker to find this at the bottom
+
+$requested_by = "INSERT YOUR NAME HERE";
+The full name you have in Pivotal Tracker
+
+$project = "INSERT PROJECT ID HERE";
+The project id (the number in https://www.pivotaltracker.com/projects/&lt;number&gt;)
+
+
+USAGE
+pt &lt;optional type&gt; &lt;name&gt;
+
+e.g.,
+pt this is a feature
+pt f this is a feature
+pt feature this is also a feature
+pt b this is a bug
+pt c this is a chore
+
+WISHLIST
+Put multiple projects into the action selection</string>
+	<key>uidata</key>
+	<dict>
+		<key>22D4FFB4-C318-413D-B6E6-59946A18ED34</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>839F51A8-3E78-4846-8D44-A5B3CB5C7070</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>B44DF9B5-F6BB-4FDC-8072-B61654BC3BEB</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>E173F186-11D5-4BC3-94B4-AD2A6CF24EF1</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>http://kevnull.com</string>
+</dict>
+</plist>
