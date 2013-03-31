@@ -24,6 +24,8 @@ The project id (the number in https://www.pivotaltracker.com/projects/{number})
 ##Usage
 
     pt {optional type} {name}
+    
+Defaults to feature if no type is given. Acceptable types are "feature", "bug", and "chore" or their first character equivalent.
 
 ###Examples
 
