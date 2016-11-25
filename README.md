@@ -1,7 +1,7 @@
-pivotal-tracker-alfred-workflow
+Pivotal Tracker Alfred Workflow
 ===============================
 
-A workflow for Alfred v2 (alfredapp.com) to add Pivotal Tracker stories directly.
+A workflow for Alfred v2 (and possibly v3) (alfredapp.com) to add Pivotal Tracker stories directly.
 
 Creates a story to Pivotal Tracker project. Copies resulting story url to clipboard.
 
@@ -11,10 +11,6 @@ In the script, set the following:
 Go to your name->profile in Pivotal Tracker to find this at the bottom
 
     $token = "INSERT YOUR TOKEN HERE";
-
-The full name you have in Pivotal Tracker
-
-    $requested_by = "INSERT YOUR NAME HERE";
 
 The project id (the number in https://www.pivotaltracker.com/projects/{number})
 
@@ -38,6 +34,3 @@ Defaults to feature if no type is given. Acceptable types are "feature", "bug", 
     pt b this is a bug
 
     pt c this is a chore
-
-##Wishlist
-Put multiple projects into the action selection
