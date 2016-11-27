@@ -1,7 +1,7 @@
 Pivotal Tracker Alfred Workflow
 ===============================
 
-A workflow for Alfred v2 (and possibly v3) (alfredapp.com) to add Pivotal Tracker stories directly.
+A workflow for Alfred v2 and v3 (alfredapp.com) to add Pivotal Tracker stories directly.
 
 Creates a story to Pivotal Tracker project. Copies resulting story url to clipboard.
 
